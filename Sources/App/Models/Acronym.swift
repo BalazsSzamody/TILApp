@@ -2,7 +2,7 @@ import Vapor
 //import FluentMySQL
 import FluentPostgreSQL
 
-final class Acronym: Codable {
+final class Acronym: NSObject, Codable {
     var id: Int?
     var short: String
     var long: String

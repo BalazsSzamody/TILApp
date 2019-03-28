@@ -46,7 +46,6 @@ extension Application {
             url: URL(string: path)!,
             headers: headers)
         let wrappedRequest = Request(http: request, using: self)
-        
         if let body = body {
             try wrappedRequest.content.encode(body)
         }

@@ -77,14 +77,22 @@ struct AcronymsController: RouteCollection {
         return try flatMap(req.parameters.next(Acronym.self),
                            req.content.decode([String: String].self),
                            { (acronym, payload) -> Future<Acronym> in
-                            var acronymDict = try acronym.convert(to: [String: String].self)
                             
                             payload.forEach({ (key, value) in
-                                acronymDict[key] = value
+                                switch key {
+                                case "short":
+                                    acronym.short = value
+                                case "long":
+                                    acronym.long = value
+                                case "userID":
+                                    guard let uuid = UUID(value) else {
+                                        return
+                                    }
+                                    acronym.userID = uuid
+                                default:
+                                    return
+                                }
                             })
-                            let patchedAcronym = try acronymDict.convert(to: Acronym.self)
-                            acronym.setContent(from: patchedAcronym)
-                            
                             return acronym.save(on: req)
                     })
     }

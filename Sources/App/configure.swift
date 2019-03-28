@@ -43,9 +43,19 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     
     switch env {
     case .testing:
-        databaseHost = "localhost"
+        if let testHost = Environment.get("DATABASE_HOST") {
+            databaseHost = testHost
+        } else {
+            databaseHost = "localhost"
+        }
+        
+        if let testPort = Environment.get("DATABASE_PORT") {
+            databasePort = Int(testPort) ?? 5433
+        } else {
+            databasePort = 5433
+        }
+        
         databaseName = "testdb"
-        databasePort = 5433
         databaseUsername = "testing"
         password = "password"
     default:
